@@ -1,42 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>St. Xavier's — 3D Crest Model</title>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0a0a; color: #c9a961; font-family: Georgia, serif; overflow: hidden; height: 100vh; }
-.header { text-align: center; padding: 20px; }
-.header h1 { font-size: 24px; color: #c9a961; }
-.header p { color: #666; font-size: 14px; margin-top: 5px; }
-.buttons { display: flex; gap: 10px; justify-content: center; padding: 10px; }
-.btn { padding: 10px 20px; border: 1px solid #c9a961; background: transparent; color: #c9a961; cursor: pointer; font-family: Georgia, serif; font-size: 14px; border-radius: 8px; transition: all 0.3s; }
-.btn:hover { background: #c9a961; color: #0a0a0a; }
-.btn.active { background: #c9a961; color: #0a0a0a; }
-viewer { width: 100%; height: calc(100vh - 140px); display: block; }
-.loading { text-align: center; padding: 50px; color: #666; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>St. Xavier's School Crest — 3D Model</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root {
+      --gold: #C4922B;
+      --gold-light: #E8C558;
+      --red: #B00A05;
+      --blue: #0666A8;
+      --cream: #FAF6E8;
+      --dark: #1A1A2E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: linear-gradient(135deg, var(--cream) 0%, #FFF 100%);
+      color: var(--dark);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      color: white;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(6, 102, 168, 0.3);
+    }
+    header h1 {
+      font-size: 2.5em;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    header p { font-size: 1.1em; opacity: 0.95; }
+    .crest-subtitle {
+      font-style: italic;
+      margin-top: 8px;
+      font-size: 0.95em;
+    }
+
+    .reference-section {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .reference-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 350px;
+    }
+    .reference-card img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 2px solid var(--gold);
+    }
+    .reference-card h3 {
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .reference-card p {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 900px) {
+      .models-grid { grid-template-columns: 1fr; }
+    }
+
+    .model-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border: 3px solid var(--gold);
+    }
+    .model-header {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: white;
+      padding: 16px 20px;
+    }
+    .model-header h2 {
+      font-size: 1.4em;
+      margin-bottom: 4px;
+    }
+    .model-header .method {
+      font-size: 0.85em;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .model-header .stats {
+      font-size: 0.8em;
+      margin-top: 6px;
+      opacity: 0.85;
+    }
+    model-viewer {
+      width: 100%;
+      height: 450px;
+      background: linear-gradient(180deg, #f0f0f5, #e0e0e8);
+      --poster-color: transparent;
+    }
+    .model-controls {
+      padding: 16px 20px;
+      background: #fafafa;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+    .model-controls button {
+      background: var(--blue);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.2s;
+    }
+    .model-controls button:hover {
+      background: var(--red);
+      transform: translateY(-2px);
+    }
+    .model-controls button.active {
+      background: var(--red);
+    }
+
+    .info-section {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border-left: 5px solid var(--gold);
+    }
+    .info-section h2 {
+      color: var(--red);
+      margin-bottom: 16px;
+      font-size: 1.6em;
+    }
+    .info-section h3 {
+      color: var(--blue);
+      margin: 16px 0 8px;
+    }
+    .info-section p {
+      line-height: 1.7;
+      margin-bottom: 12px;
+      color: #333;
+    }
+    .info-section ul {
+      margin-left: 24px;
+      margin-bottom: 12px;
+    }
+    .info-section li {
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    .methods-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    @media (max-width: 700px) {
+      .methods-comparison { grid-template-columns: 1fr; }
+    }
+    .method-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fafafa;
+    }
+    .method-card h4 {
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .method-card .pros { color: #1a7a1a; }
+    .method-card .cons { color: #b00a05; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 0.9em;
+    }
+    footer a { color: var(--blue); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
-<div class="header">
-  <h1>St. Xavier's Junior Senior School — 3D Crest</h1>
-  <p>Interactive 3D model — drag to rotate, scroll to zoom</p>
-</div>
-<div class="buttons">
-  <button class="btn active" onclick="loadModel('method3-blender')">Method 3: Blender Procedural</button>
-</div>
-<div id="viewer-container">
-  <model-viewer id="viewer" src="models/method3-blender.glb" alt="St. Xavier's 3D crest model" auto-rotate camera-controls shadow-intensity="1" exposure="0.8" environment-image="neutral" auto-rotate-delay="3000" rotation-per-second="30deg"></model-viewer>
-</div>
-<script>
-function loadModel(name) {
-  document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  const viewer = document.getElementById('viewer');
-  viewer.src = 'models/' + name + '.glb';
-}
-</script>
+  <header>
+    <h1>St. Xavier's Junior Senior School</h1>
+    <p>3D Crest Recreation — Blender &amp; Blockbench</p>
+    <div class="crest-subtitle">Goshala Road, Muzaffarpur · Discipline and Justice</div>
+  </header>
+
+  <section class="reference-section">
+    <div class="reference-card">
+      <h3>Original Reference</h3>
+      <img src="models/crest-reference.jpg" alt="Original St. Xavier's crest" />
+      <p>The original 2D crest image that was used as the reference for both 3D reconstructions.</p>
+    </div>
+    <div class="reference-card">
+      <h3>Blender Render</h3>
+      <img src="models/crest_blender_preview.png" alt="Blender 3D render preview" />
+      <p>Cycles render of the Blender model (1024×1024, 64 samples). High-detail bas-relief.</p>
+    </div>
+    <div class="reference-card">
+      <h3>Blockbench Render</h3>
+      <img src="models/crest_blockbench_preview.png" alt="Blockbench 3D render preview" />
+      <p>Top-down projection of the Blockbench voxel model (110 cubes, 880 vertices).</p>
+    </div>
+  </section>
+
+  <div class="models-grid">
+    <div class="model-card">
+      <div class="model-header">
+        <div class="method">Method 1 · Blender Headless</div>
+        <h2>Blender 3D Model</h2>
+        <div class="stats">67 objects · 1.1 MB GLB · Cycles CPU render</div>
+      </div>
+      <model-viewer
+        src="models/crest_blender.glb"
+        alt="St. Xavier's crest 3D model built with Blender"
+        auto-rotate
+        camera-controls
+        shadow-intensity="0.5"
+        environment-image="neutral"
+        exposure="1.0"
+        rotation-per-second="30deg"
+        min-camera-orbit="auto auto 5m"
+        max-camera-orbit="auto auto 20m"
+      >
+        <div class="loading" slot="poster">Loading Blender model…</div>
+      </model-viewer>
+      <div class="model-controls">
+        <button onclick="toggleRotate('blender')">Toggle Rotate</button>
+        <button onclick="resetCamera('blender')">Reset View</button>
+        <button onclick="zoomIn('blender')">Zoom In</button>
+        <button onclick="zoomOut('blender')">Zoom Out</button>
+      </div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-header">
+        <div class="method">Method 2 · Blockbench / Browser Workbench</div>
+        <h2>Blockbench Voxel Model</h2>
+        <div class="stats">110 cubes · 30 KB GLB · Voxel-style</div>
+      </div>
+      <model-viewer
+        src="models/crest_blockbench.glb"
+        alt="St. Xavier's crest 3D model built with Blockbench"
+        auto-rotate
+        camera-controls
+        shadow-intensity="0.5"
+        environment-image="neutral"
+        exposure="1.0"
+        rotation-per-second="30deg"
+        min-camera-orbit="auto auto 5m"
+        max-camera-orbit="auto auto 20m"
+      >
+        <div class="loading" slot="poster">Loading Blockbench model…</div>
+      </model-viewer>
+      <div class="model-controls">
+        <button onclick="toggleRotate('blockbench')">Toggle Rotate</button>
+        <button onclick="resetCamera('blockbench')">Reset View</button>
+        <button onclick="zoomIn('blockbench')">Zoom In</button>
+        <button onclick="zoomOut('blockbench')">Zoom Out</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="info-section">
+    <h2>About This 3D Recreation</h2>
+    <p>
+      This page presents two independent 3D reconstructions of the St. Xavier's Junior Senior School crest,
+      both built from the same reference image using different tools and techniques. Each model is fully
+      interactive — drag to rotate, scroll to zoom, and use the controls below each model to toggle auto-rotation
+      or reset the view.
+    </p>
+
+    <h3>Method 1: Blender Headless Scripting</h3>
+    <p>
+      The Blender model was built entirely with a Python script executed in headless Blender 3.6 LTS.
+      The reference image was first analyzed pixel-by-pixel (k-means color clustering, connected-component
+      segmentation, bounding-box extraction) to determine exact element positions, colors, and proportions.
+      A VLM (vision language model) was then used to identify each element by name and verify text content.
+      The script builds each element as a separate mesh — the gold shield frame as a bmesh-built annulus,
+      the blue field as a filled polygon, the sunburst as 24 triangular rays, the India map as a 19-vertex
+      polygon, the scales of justice as cubes and cylinders, the torch as a cube handle with UV-sphere flame,
+      the open book as a cover with two pages and text lines, the banners as math-built half-tori, and all
+      text as extruded Blender text objects. Rendered with Cycles CPU at 64 samples.
+    </p>
+
+    <h3>Method 2: Blockbench / Browser Workbench</h3>
+    <p>
+      The Blockbench model uses a voxel/cube-based approach — the entire crest is approximated with 110
+      colored cubes arranged on a 64×64×16 grid. Each cube represents one element of the crest (shield frame,
+      blue field, sunburst rays, India map clusters, scales, torch, flame, book pages, banners, text marks).
+      The model was generated as a Blockbench-format JSON file (.bbmodel) and then converted to GLB using
+      trimesh for universal web display. This approach is lighter (30 KB vs 1.1 MB) and easier to edit in
+      the Blockbench web editor.
+    </p>
+
+    <h3>Element Inventory</h3>
+    <p>Both models contain the following elements, derived from the reference image:</p>
+    <ul>
+      <li><strong>Gold shield frame</strong> — outer border, heraldic shield shape with rounded top and pointed bottom</li>
+      <li><strong>Blue shield field</strong> — royal blue interior of the shield</li>
+      <li><strong>Golden sunburst</strong> — 24 radiating rays behind the central elements</li>
+      <li><strong>Green India map</strong> — stylized silhouette of the Indian subcontinent</li>
+      <li><strong>Gold scales of justice</strong> — vertical pole, horizontal beam, two hanging pans</li>
+      <li><strong>Torch with flame</strong> — brown handle, skin-tone hand, gold cup, orange-yellow teardrop flame</li>
+      <li><strong>Open book</strong> — red cover, white pages, black text lines, gold trim</li>
+      <li><strong>Top red banner</strong> — curved ribbon with "ST. XAVIER'S · JUNIOR SENIOR · SCHOOL"</li>
+      <li><strong>Bottom red banner</strong> — curved ribbon with "DISCIPLINE · AND · JUSTICE"</li>
+      <li><strong>Side text</strong> — "GOSHALA ROAD" (left) and "MUZAFFARPUR" (right)</li>
+    </ul>
+
+    <div class="methods-comparison">
+      <div class="method-card">
+        <h4>Blender Model</h4>
+        <p class="pros"><strong>Pros:</strong> Smooth curves, proper text rendering, realistic materials, high detail.</p>
+        <p class="cons"><strong>Cons:</strong> Larger file (1.1 MB), requires Blender to edit, longer build time.</p>
+      </div>
+      <div class="method-card">
+        <h4>Blockbench Model</h4>
+        <p class="pros"><strong>Pros:</strong> Tiny file (30 KB), editable in browser, fast to iterate.</p>
+        <p class="cons"><strong>Cons:</strong> Blocky/voxel appearance, no real text (just colored marks), less detail.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p>
+    <p>Built with Blender 3.6 LTS + Blockbench · Deployed on Vercel · <a href="https://github.com/StXaviersOfficial/glm-workspace">Source on GitHub</a></p>
+  </footer>
+
+  <script>
+    // Model viewer controls
+    function getViewer(method) {
+      const viewers = document.querySelectorAll('model-viewer');
+      const idx = method === 'blender' ? 0 : 1;
+      return viewers[idx];
+    }
+
+    function toggleRotate(method) {
+      const viewer = getViewer(method);
+      viewer.autoRotate = !viewer.autoRotate;
+      const btn = event.target;
+      btn.classList.toggle('active', viewer.autoRotate);
+    }
+
+    function resetCamera(method) {
+      const viewer = getViewer(method);
+      viewer.cameraOrbit = '0deg 90deg 12m';
+      viewer.fieldOfView = '30deg';
+    }
+
+    function zoomIn(method) {
+      const viewer = getViewer(method);
+      const orbit = viewer.cameraOrbit.split(' ');
+      const distance = parseFloat(orbit[2]);
+      const newDist = Math.max(5, distance - 2);
+      viewer.cameraOrbit = `${orbit[0]} ${orbit[1]} ${newDist}m`;
+    }
+
+    function zoomOut(method) {
+      const viewer = getViewer(method);
+      const orbit = viewer.cameraOrbit.split(' ');
+      const distance = parseFloat(orbit[2]);
+      const newDist = Math.min(20, distance + 2);
+      viewer.cameraOrbit = `${orbit[0]} ${orbit[1]} ${newDist}m`;
+    }
+
+    // Initialize: set both to auto-rotate
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('model-viewer').forEach(v => {
+        v.autoRotate = true;
+      });
+      // Mark toggle buttons as active
+      document.querySelectorAll('.model-controls button').forEach(btn => {
+        if (btn.textContent.includes('Toggle Rotate')) {
+          btn.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
