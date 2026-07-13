@@ -3,346 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>St. Xavier's — 3D Logo Animation</title>
+<title>St. Xavier's — 3D Crest Model</title>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0a0a; overflow: hidden; }
-canvas { display: block; }
-#loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #c9a961; font-family: Georgia, serif; font-size: 24px; }
+body { background: #0a0a0a; color: #c9a961; font-family: Georgia, serif; overflow: hidden; height: 100vh; }
+.header { text-align: center; padding: 20px; }
+.header h1 { font-size: 24px; color: #c9a961; }
+.header p { color: #666; font-size: 14px; margin-top: 5px; }
+.buttons { display: flex; gap: 10px; justify-content: center; padding: 10px; }
+.btn { padding: 10px 20px; border: 1px solid #c9a961; background: transparent; color: #c9a961; cursor: pointer; font-family: Georgia, serif; font-size: 14px; border-radius: 8px; transition: all 0.3s; }
+.btn:hover { background: #c9a961; color: #0a0a0a; }
+.btn.active { background: #c9a961; color: #0a0a0a; }
+viewer { width: 100%; height: calc(100vh - 140px); display: block; }
+.loading { text-align: center; padding: 50px; color: #666; }
 </style>
 </head>
 <body>
-<div id="loading">Loading 3D...</div>
-<script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
-</script>
-<script type="module">
-import * as THREE from 'three';
-
-// ─── SCENE SETUP ───
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0a0a);
-
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 8);
-
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-document.body.appendChild(renderer.domElement);
-
-// ─── LIGHTING ───
-const ambient = new THREE.AmbientLight(0xffffff, 0.3);
-scene.add(ambient);
-
-const keyLight = new THREE.DirectionalLight(0xffd700, 1.2);
-keyLight.position.set(5, 10, 5);
-keyLight.castShadow = true;
-scene.add(keyLight);
-
-const fillLight = new THREE.DirectionalLight(0x4a1c2f, 0.5);
-fillLight.position.set(-5, 3, 2);
-scene.add(fillLight);
-
-const rimLight = new THREE.PointLight(0xc9a961, 0.8, 20);
-rimLight.position.set(0, -2, 5);
-scene.add(rimLight);
-
-// ─── MATERIALS ───
-const goldMat = new THREE.MeshStandardMaterial({ color: 0xc9a961, metalness: 0.9, roughness: 0.15 });
-const darkGoldMat = new THREE.MeshStandardMaterial({ color: 0xa0862e, metalness: 0.85, roughness: 0.2 });
-const blueMat = new THREE.MeshStandardMaterial({ color: 0x1e50a0, metalness: 0.3, roughness: 0.4 });
-const redMat = new THREE.MeshStandardMaterial({ color: 0xb41e28, metalness: 0.2, roughness: 0.5 });
-const whiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.1, roughness: 0.6 });
-const greenMat = new THREE.MeshStandardMaterial({ color: 0x28b450, metalness: 0.2, roughness: 0.5 });
-const orangeMat = new THREE.MeshStandardMaterial({ color: 0xff6b1a, metalness: 0.3, roughness: 0.4, emissive: 0xff3300, emissiveIntensity: 0.3 });
-
-// ─── SHIELD ───
-const shieldShape = new THREE.Shape();
-shieldShape.moveTo(0, 2.5);
-shieldShape.lineTo(1.8, 2.5);
-shieldShape.lineTo(1.8, 0);
-shieldShape.quadraticCurveTo(1.8, -2.5, 0, -2.8);
-shieldShape.quadraticCurveTo(-1.8, -2.5, -1.8, 0);
-shieldShape.lineTo(-1.8, 2.5);
-shieldShape.lineTo(0, 2.5);
-
-const shieldGeo = new THREE.ExtrudeGeometry(shieldShape, {
-  depth: 0.3, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.05, bevelSegments: 3
-});
-const shield = new THREE.Mesh(shieldGeo, blueMat);
-shield.castShadow = true;
-shield.receiveShadow = true;
-scene.add(shield);
-
-// Shield border (gold outline)
-const borderShape = new THREE.Shape();
-borderShape.moveTo(0, 2.5);
-borderShape.lineTo(1.8, 2.5);
-borderShape.lineTo(1.8, 0);
-borderShape.quadraticCurveTo(1.8, -2.5, 0, -2.8);
-borderShape.quadraticCurveTo(-1.8, -2.5, -1.8, 0);
-borderShape.lineTo(-1.8, 2.5);
-const hole = new THREE.Path();
-hole.moveTo(0, 2.3);
-hole.lineTo(1.65, 2.3);
-hole.lineTo(1.65, 0);
-hole.quadraticCurveTo(1.65, -2.3, 0, -2.6);
-hole.quadraticCurveTo(-1.65, -2.3, -1.65, 0);
-hole.lineTo(-1.65, 2.3);
-borderShape.holes.push(hole);
-
-const borderGeo = new THREE.ExtrudeGeometry(borderShape, {
-  depth: 0.35, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 2
-});
-const shieldBorder = new THREE.Mesh(borderGeo, goldMat);
-shieldBorder.castShadow = true;
-scene.add(shieldBorder);
-
-// ─── SCALES OF JUSTICE ───
-const scalesGroup = new THREE.Group();
-// Central pole
-const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.5, 8);
-const pole = new THREE.Mesh(poleGeo, goldMat);
-pole.position.y = 0.8;
-scalesGroup.add(pole);
-// Crossbar
-const barGeo = new THREE.CylinderGeometry(0.03, 0.03, 1.2, 8);
-const bar = new THREE.Mesh(barGeo, goldMat);
-bar.rotation.z = Math.PI / 2;
-bar.position.y = 1.5;
-scalesGroup.add(bar);
-// Pans (two small discs)
-const panGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.03, 16);
-const pan1 = new THREE.Mesh(panGeo, goldMat);
-pan1.position.set(-0.5, 1.2, 0);
-scalesGroup.add(pan1);
-const pan2 = new THREE.Mesh(panGeo, goldMat);
-pan2.position.set(0.5, 1.2, 0);
-scalesGroup.add(pan2);
-// Chains
-const chainGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.3, 4);
-const chain1 = new THREE.Mesh(chainGeo, goldMat);
-chain1.position.set(-0.5, 1.35, 0);
-scalesGroup.add(chain1);
-const chain2 = new THREE.Mesh(chainGeo, goldMat);
-chain2.position.set(0.5, 1.35, 0);
-scalesGroup.add(chain2);
-// Base
-const baseGeo = new THREE.CylinderGeometry(0.15, 0.2, 0.1, 8);
-const scaleBase = new THREE.Mesh(baseGeo, goldMat);
-scaleBase.position.y = 0.05;
-scalesGroup.add(scaleBase);
-scalesGroup.position.y = 0.3;
-scalesGroup.scale.set(0.8, 0.8, 0.8);
-scene.add(scalesGroup);
-
-// ─── TORCH ───
-const torchGroup = new THREE.Group();
-const torchHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.5, 8), goldMat);
-torchHandle.position.y = -0.2;
-torchGroup.add(torchHandle);
-const torchFlame = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.3, 8), orangeMat);
-torchFlame.position.y = 0.15;
-torchGroup.add(torchFlame);
-// Hand (simple sphere)
-const hand = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), whiteMat);
-hand.position.y = -0.45;
-torchGroup.add(hand);
-torchGroup.position.set(0, -0.3, 0.2);
-torchGroup.scale.set(0.8, 0.8, 0.8);
-scene.add(torchGroup);
-
-// ─── OPEN BOOK ───
-const bookGroup = new THREE.Group();
-const bookLeft = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.05, 0.4), redMat);
-bookLeft.position.x = -0.3;
-bookLeft.rotation.y = 0.2;
-bookGroup.add(bookLeft);
-const bookRight = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.05, 0.4), redMat);
-bookRight.position.x = 0.3;
-bookRight.rotation.y = -0.2;
-bookGroup.add(bookRight);
-// Pages
-const pagesLeft = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.03, 0.35), whiteMat);
-pagesLeft.position.set(-0.3, 0.01, 0);
-pagesLeft.rotation.y = 0.2;
-bookGroup.add(pagesLeft);
-const pagesRight = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.03, 0.35), whiteMat);
-pagesRight.position.set(0.3, 0.01, 0);
-pagesRight.rotation.y = -0.2;
-bookGroup.add(pagesRight);
-bookGroup.position.y = -1.5;
-bookGroup.scale.set(0.9, 0.9, 0.9);
-scene.add(bookGroup);
-
-// ─── INDIA MAP (simplified green shape) ───
-const indiaShape = new THREE.Shape();
-// Simplified India outline
-indiaShape.moveTo(-0.3, 0.5);
-indiaShape.lineTo(0.1, 0.6);
-indiaShape.lineTo(0.3, 0.3);
-indiaShape.lineTo(0.25, -0.1);
-indiaShape.lineTo(0.1, -0.4);
-indiaShape.lineTo(-0.05, -0.35);
-indiaShape.lineTo(-0.2, -0.1);
-indiaShape.lineTo(-0.35, 0.2);
-indiaShape.lineTo(-0.3, 0.5);
-const indiaGeo = new THREE.ExtrudeGeometry(indiaShape, { depth: 0.1, bevelEnabled: false });
-const indiaMap = new THREE.Mesh(indiaGeo, greenMat);
-indiaMap.position.z = 0.15;
-indiaMap.scale.set(0.8, 1, 1);
-scene.add(indiaMap);
-
-// ─── SUNBURST ───
-const sunburstGroup = new THREE.Group();
-for (let i = 0; i < 16; i++) {
-  const ray = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.6, 4), goldMat);
-  ray.position.y = 0.5;
-  ray.rotation.z = (i / 16) * Math.PI * 2;
-  ray.position.x = Math.cos((i / 16) * Math.PI * 2) * 0.1;
-  ray.position.y = Math.sin((i / 16) * Math.PI * 2) * 0.1;
-  sunburstGroup.add(ray);
+<div class="header">
+  <h1>St. Xavier's Junior Senior School — 3D Crest</h1>
+  <p>Interactive 3D model — drag to rotate, scroll to zoom</p>
+</div>
+<div class="buttons">
+  <button class="btn active" onclick="loadModel('method3-blender')">Method 3: Blender Procedural</button>
+</div>
+<div id="viewer-container">
+  <model-viewer id="viewer" src="models/method3-blender.glb" alt="St. Xavier's 3D crest model" auto-rotate camera-controls shadow-intensity="1" exposure="0.8" environment-image="neutral" auto-rotate-delay="3000" rotation-per-second="30deg"></model-viewer>
+</div>
+<script>
+function loadModel(name) {
+  document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const viewer = document.getElementById('viewer');
+  viewer.src = 'models/' + name + '.glb';
 }
-const sunCenter = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), goldMat);
-sunburstGroup.add(sunCenter);
-sunburstGroup.position.z = 0.1;
-sunburstGroup.scale.set(0.7, 0.7, 0.7);
-scene.add(sunburstGroup);
-
-// ─── BANNERS (text planes) ───
-function createBannerTexture(text, width = 512, height = 64) {
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  // Red background
-  ctx.fillStyle = '#B41E28';
-  ctx.fillRect(0, 0, width, height);
-  // Gold border
-  ctx.strokeStyle = '#C9A961';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(2, 2, width - 4, height - 4);
-  // White text
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 28px Georgia, serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, width / 2, height / 2);
-  return new THREE.CanvasTexture(canvas);
-}
-
-function makeBanner(text, w, h, x, y, z) {
-  const tex = createBannerTexture(text);
-  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
-  const geo = new THREE.PlaneGeometry(w, h);
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(x, y, z);
-  return mesh;
-}
-
-const topBanner = makeBanner("ST. XAVIER'S JUNIOR SENIOR SCHOOL", 5, 0.5, 0, 3, 0.4);
-const leftBanner = makeBanner("GOSHALA ROAD", 1.8, 0.35, -2.5, 0, 0.4);
-const rightBanner = makeBanner("MUZAFFARPUR", 1.8, 0.35, 2.5, 0, 0.4);
-const bottomBanner = makeBanner("DISCIPLINE AND JUSTICE", 3.5, 0.4, 0, -3.2, 0.4);
-
-const banners = [topBanner, leftBanner, rightBanner, bottomBanner];
-banners.forEach(b => { b.visible = false; scene.add(b); });
-
-// ─── SHINE EFFECT ───
-const shineGeo = new THREE.PlaneGeometry(6, 0.3);
-const shineMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 });
-const shine = new THREE.Mesh(shineGeo, shineMat);
-shine.position.z = 0.5;
-scene.add(shine);
-
-// ─── DIAMOND SPARKLE ───
-const sparkGeo = new THREE.OctahedronGeometry(0.08);
-const sparkMat = new THREE.MeshStandardMaterial({ color: 0x90ff90, emissive: 0x40ff40, emissiveIntensity: 0.5 });
-const sparkle = new THREE.Mesh(sparkGeo, sparkMat);
-sparkle.position.set(2.5, -2.5, 0.5);
-sparkle.visible = false;
-scene.add(sparkle);
-
-// ─── ANIMATION ───
-const allElements = [shield, shieldBorder, scalesGroup, torchGroup, bookGroup, indiaMap, sunburstGroup];
-allElements.forEach(e => { e.scale.multiplyScalar(0.01); });
-
-const DURATION = 10000;
-let startTime = 0;
-document.getElementById('loading').style.display = 'none';
-
-function animate(now) {
-  if (!startTime) startTime = now;
-  const elapsed = now - startTime;
-  const t = (elapsed % DURATION) / DURATION;
-
-  // Phase 1: Scale up (0-0.15)
-  if (t < 0.15) {
-    const p = t / 0.15;
-    const s = 1 - Math.pow(1 - p, 3);
-    allElements.forEach(e => { e.scale.setScalar(Math.max(0.01, s * (e === shield || e === shieldBorder ? 1 : 0.8))); });
-  } else {
-    allElements.forEach(e => { e.scale.setScalar(e === shield || e === shieldBorder ? 1 : 0.8); });
-  }
-
-  // Elements appear one by one
-  scalesGroup.visible = t > 0.08;
-  torchGroup.visible = t > 0.10;
-  bookGroup.visible = t > 0.12;
-  indiaMap.visible = t > 0.06;
-  sunburstGroup.visible = t > 0.04;
-
-  // Banners appear
-  const bannerT = t > 0.20 ? Math.min(1, (t - 0.20) / 0.15) : 0;
-  banners.forEach((b, i) => { b.visible = bannerT > 0; b.material.opacity = bannerT; });
-
-  // Shine effect (top to bottom) — user likes this
-  if (t >= 0.45 && t <= 0.65) {
-    const st = (t - 0.45) / 0.20;
-    shine.position.y = 3 - st * 6;
-    shine.material.opacity = 0.5 * Math.sin(st * Math.PI);
-  } else {
-    shine.material.opacity = 0;
-  }
-
-  // Diamond sparkle
-  if (t > 0.30) {
-    sparkle.visible = true;
-    sparkle.rotation.y += 0.05;
-    sparkle.rotation.x += 0.03;
-  }
-
-  // Subtle floating (0.65-1.0)
-  if (t > 0.65) {
-    const p = (t - 0.65) / 0.35;
-    const floatY = Math.sin(p * Math.PI * 3) * 0.05;
-    const rotZ = Math.sin(p * Math.PI * 2) * 0.01;
-    scene.rotation.z = rotZ;
-    camera.position.y = floatY;
-  } else {
-    scene.rotation.z = 0;
-    camera.position.y = 0;
-  }
-
-  // Slow rotation for 3D effect
-  if (t > 0.15) {
-    scene.rotation.y = Math.sin(t * Math.PI * 2) * 0.1;
-  }
-
-  renderer.render(scene, camera);
-  requestAnimationFrame(animate);
-}
-requestAnimationFrame(animate);
-
-// Resize handler
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
 </script>
 </body>
 </html>
