@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>St. Xavier's School Crest — 4K 3D Model</title>
+  <title>St. Xavier's School Crest — 3D Bas-Relief (Image-to-3D)</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
     :root {
@@ -34,6 +34,16 @@
     header h1 { font-size: 2.8em; margin-bottom: 8px; letter-spacing: 1.5px; }
     header p { font-size: 1.2em; opacity: 0.95; }
     .subtitle { font-style: italic; margin-top: 10px; font-size: 1em; opacity: 0.9; }
+    .method-tag {
+      display: inline-block;
+      background: var(--gold);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: bold;
+      margin-top: 8px;
+    }
 
     .reference-section {
       display: flex;
@@ -97,7 +107,7 @@
     }
     .viewer-wrapper model-viewer {
       width: 100%;
-      height: 480px;
+      height: 500px;
       background: radial-gradient(ellipse at center, #f5f5f8 0%, #d8d8e0 100%);
       --poster-color: transparent;
     }
@@ -167,8 +177,14 @@
     .info-section p { line-height: 1.8; margin-bottom: 12px; color: #333; }
     .info-section ul { margin-left: 24px; margin-bottom: 12px; }
     .info-section li { line-height: 1.7; margin-bottom: 6px; }
+    .info-section code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
 
-    /* FULLSCREEN OVERLAY */
     .fullscreen-overlay {
       display: none;
       position: fixed;
@@ -246,120 +262,126 @@
 <body>
   <header>
     <h1>St. Xavier's Junior Senior School</h1>
-    <p>4K 3D Crest Recreation <span class="badge-4k">4K</span></p>
+    <p>3D Bas-Relief — Image-to-3D Reconstruction <span class="badge-4k">4K</span></p>
     <div class="subtitle">Goshala Road, Muzaffarpur · Discipline and Justice</div>
+    <div class="method-tag">Meshy.ai style · 3D-printable · Exact image texture</div>
   </header>
 
   <section class="reference-section">
-    <div class="ref-card" onclick="openImageFullscreen('models/crest-reference.jpg', 'Original Reference')">
+    <div class="ref-card" onclick="openImageFullscreen('models/crest_texture.png', 'Original Reference')">
       <h3>Original Reference</h3>
-      <img src="models/crest-reference.jpg" alt="Original crest" />
-      <p>Click to view full-size</p>
+      <img src="models/crest_texture.png" alt="Original crest" />
+      <p>The exact image used as both texture and height source</p>
     </div>
-    <div class="ref-card" onclick="openImageFullscreen('models/crest_blender_4k.png', 'Blender 4K Render')">
-      <h3>Blender 4K Render <span class="badge-4k">4K</span></h3>
-      <img src="models/crest_blender_preview.png" alt="Blender render" />
-      <p>Cycles CPU · 2K→4K LANCZOS upscale</p>
+    <div class="ref-card" onclick="openImageFullscreen('models/crest_relief_4k.png', 'Blender Bas-Relief 4K')">
+      <h3>Blender Bas-Relief <span class="badge-4k">4K</span></h3>
+      <img src="models/crest_relief_card.png" alt="Blender relief" />
+      <p>65k vertices · Image texture on displaced mesh · Cycles render</p>
     </div>
-    <div class="ref-card" onclick="openImageFullscreen('models/crest_blockbench_4k.png', 'Blockbench 4K Render')">
-      <h3>Blockbench 4K Render <span class="badge-4k">4K</span></h3>
-      <img src="models/crest_blockbench_preview.png" alt="Blockbench render" />
-      <p>1695 voxel cubes · 4K projection</p>
+    <div class="ref-card" onclick="openImageFullscreen('models/crest_relief_trimesh_4k.png', 'Trimesh Bas-Relief 4K')">
+      <h3>Trimesh Bas-Relief <span class="badge-4k">4K</span></h3>
+      <img src="models/crest_relief_trimesh_card.png" alt="Trimesh relief" />
+      <p>80k vertices · Vertex colors · 3D-printable thickness</p>
     </div>
   </section>
 
   <div class="models-grid">
     <div class="model-card">
       <div class="model-header">
-        <div class="method">Method 1 · Blender Headless</div>
-        <h2>Blender 3D Model</h2>
-        <div class="stats">High-detail · Cycles CPU · Interactive 3D</div>
+        <div class="method">Method 1 · Blender Image-to-3D</div>
+        <h2>Blender Bas-Relief</h2>
+        <div class="stats">65,536 vertices · Image texture + displacement · 17 MB GLB</div>
       </div>
-      <div class="viewer-wrapper" onclick="openModelFullscreen('blender')">
+      <div class="viewer-wrapper" onclick="openModelFullscreen('relief')">
         <model-viewer
-          id="mv-blender"
-          src="models/crest_blender.glb"
-          alt="St. Xavier's crest — Blender model"
+          id="mv-relief"
+          src="models/crest_relief.glb"
+          alt="St. Xavier's crest — Blender bas-relief"
           auto-rotate
           camera-controls
-          shadow-intensity="0.4"
+          shadow-intensity="0.5"
           environment-image="neutral"
           exposure="1.0"
-          rotation-per-second="20deg"
+          rotation-per-second="15deg"
         >
-          <div class="loading" slot="poster">Loading Blender model…</div>
+          <div class="loading" slot="poster">Loading Blender bas-relief…</div>
         </model-viewer>
         <div class="click-icon">⛶</div>
         <div class="fullscreen-hint">Click to view fullscreen</div>
       </div>
       <div class="model-controls">
-        <button onclick="event.stopPropagation(); toggleRotate('blender')" class="active">Auto-Rotate</button>
-        <button onclick="event.stopPropagation(); resetCamera('blender')">Reset View</button>
-        <button onclick="event.stopPropagation(); zoomIn('blender')">Zoom In</button>
-        <button onclick="event.stopPropagation(); zoomOut('blender')">Zoom Out</button>
-        <button onclick="event.stopPropagation(); openModelFullscreen('blender')" style="background:var(--red)">⛶ Fullscreen</button>
+        <button onclick="event.stopPropagation(); toggleRotate('relief')" class="active">Auto-Rotate</button>
+        <button onclick="event.stopPropagation(); resetCamera('relief')">Reset View</button>
+        <button onclick="event.stopPropagation(); zoomIn('relief')">Zoom In</button>
+        <button onclick="event.stopPropagation(); zoomOut('relief')">Zoom Out</button>
+        <button onclick="event.stopPropagation(); openModelFullscreen('relief')" style="background:var(--red)">⛶ Fullscreen</button>
       </div>
     </div>
 
     <div class="model-card">
       <div class="model-header">
-        <div class="method">Method 2 · Blockbench Voxel</div>
-        <h2>Blockbench Model</h2>
-        <div class="stats">1695 cubes · Voxel style · Interactive 3D</div>
+        <div class="method">Method 2 · Trimesh Image-to-3D</div>
+        <h2>Trimesh Bas-Relief</h2>
+        <div class="stats">80,000 vertices · Vertex colors · 3D-printable · 3 MB GLB</div>
       </div>
-      <div class="viewer-wrapper" onclick="openModelFullscreen('blockbench')">
+      <div class="viewer-wrapper" onclick="openModelFullscreen('trimesh')">
         <model-viewer
-          id="mv-blockbench"
-          src="models/crest_blockbench.glb"
-          alt="St. Xavier's crest — Blockbench model"
+          id="mv-trimesh"
+          src="models/crest_relief_trimesh.glb"
+          alt="St. Xavier's crest — Trimesh bas-relief"
           auto-rotate
           camera-controls
-          shadow-intensity="0.4"
+          shadow-intensity="0.5"
           environment-image="neutral"
           exposure="1.0"
-          rotation-per-second="20deg"
+          rotation-per-second="15deg"
         >
-          <div class="loading" slot="poster">Loading Blockbench model…</div>
+          <div class="loading" slot="poster">Loading Trimesh bas-relief…</div>
         </model-viewer>
         <div class="click-icon">⛶</div>
         <div class="fullscreen-hint">Click to view fullscreen</div>
       </div>
       <div class="model-controls">
-        <button onclick="event.stopPropagation(); toggleRotate('blockbench')" class="active">Auto-Rotate</button>
-        <button onclick="event.stopPropagation(); resetCamera('blockbench')">Reset View</button>
-        <button onclick="event.stopPropagation(); zoomIn('blockbench')">Zoom In</button>
-        <button onclick="event.stopPropagation(); zoomOut('blockbench')">Zoom Out</button>
-        <button onclick="event.stopPropagation(); openModelFullscreen('blockbench')" style="background:var(--red)">⛶ Fullscreen</button>
+        <button onclick="event.stopPropagation(); toggleRotate('trimesh')" class="active">Auto-Rotate</button>
+        <button onclick="event.stopPropagation(); resetCamera('trimesh')">Reset View</button>
+        <button onclick="event.stopPropagation(); zoomIn('trimesh')">Zoom In</button>
+        <button onclick="event.stopPropagation(); zoomOut('trimesh')">Zoom Out</button>
+        <button onclick="event.stopPropagation(); openModelFullscreen('trimesh')" style="background:var(--red)">⛶ Fullscreen</button>
       </div>
     </div>
   </div>
 
   <section class="info-section">
-    <h2>About This 4K Recreation</h2>
-    <p>This page presents two independent 3D reconstructions of the St. Xavier's Junior Senior School crest, both rendered at 4K resolution (3840×3840) from the same reference image. <strong>Click any model to open it in fullscreen mode</strong> — drag to rotate, scroll to zoom, right-click to pan.</p>
+    <h2>How This Works (Image-to-3D)</h2>
+    <p>This is a true <strong>image-to-3D bas-relief</strong> reconstruction — the same approach used by Meshy.ai, but done locally with open-source tools. The original crest image is used both as the <strong>surface texture</strong> AND as the source for <strong>3D displacement depth</strong>. The result is a 3D-printable model that looks exactly like the reference when viewed from the front, with real geometric depth.</p>
 
-    <h3>Method 1: Blender Headless (High-Detail)</h3>
-    <p>The Blender model was built with a Python script in headless Blender 3.6 LTS. The reference image was analyzed pixel-by-pixel (k-means color clustering, connected-component segmentation) and a VLM identified every element's exact position, size, and color. Each element is a separate mesh: gold shield frame (bmesh annulus), blue field (filled polygon), 16-ray sunburst, India map + Sri Lanka, gold scales of justice with chains and pans, torch with brown handle + gold cup + 3-layer orange-yellow flame, V-shaped open book with text lines, curved red banners with extruded serif text. Rendered with Cycles CPU at 96 samples, 2K native then upscaled to 4K with LANCZOS.</p>
+    <h3>Process</h3>
+    <ol style="line-height: 1.8; margin-left: 24px;">
+      <li><strong>Height map generation:</strong> The reference image is analyzed using luminance + saturation + edge detection + background-difference. Colored crest elements get high values (raised), white background gets low values (flat). Smoothed with Gaussian blur.</li>
+      <li><strong>Mesh subdivision:</strong> A flat plane is subdivided into a high-poly grid (256×256 for Blender = 65,536 vertices, 200×200 for trimesh = 40,000 vertices).</li>
+      <li><strong>Vertex displacement:</strong> Each vertex's Z coordinate is set by sampling the height map at its UV position. This creates real 3D relief geometry — the torch, scales, book, and banners all have actual depth.</li>
+      <li><strong>UV mapping + texture:</strong> The original crest image is UV-mapped onto the displaced surface. The front face shows the exact image, warped onto the 3D relief.</li>
+      <li><strong>Extrusion for 3D printing:</strong> The entire mesh is extruded backward (Solidify modifier in Blender, manual extrusion in trimesh) to give it physical thickness — ready for 3D printing as a coin/medallion/bas-relief plaque.</li>
+      <li><strong>GLB export:</strong> The final mesh with embedded texture is exported as GLB, viewable in any 3D viewer including model-viewer on this page.</li>
+    </ol>
 
-    <h3>Method 2: Blockbench Voxel (Browser Workbench)</h3>
-    <p>The Blockbench model uses 1,695 colored cubes on a 128×128 grid. Each crest element is built from multiple cubes for finer detail — the shield frame, blue field, 16 sunburst rays, India landmass, scales, torch with flame layers, open book with text lines, curved banners, and text marks. Editable in the Blockbench web editor. Rendered as a 4K top-down projection.</p>
+    <h3>Why this is better than primitive-based 3D</h3>
+    <p>Previous attempts tried to <em>recreate</em> the crest using 3D primitives (cubes, spheres, cylinders) — this always looks "blocky" and never matches the exact image. The bas-relief approach uses the <strong>actual image pixels</strong> as the surface, so every detail (text, fine lines, color gradients) is preserved exactly. The 3D depth comes from the height map, giving real geometric relief that catches light and shadow naturally.</p>
 
-    <h3>Element Inventory (Both Models)</h3>
+    <h3>3D Printing</h3>
+    <p>Both GLB files are 3D-printable. The mesh is manifold (watertight) with proper thickness. Print settings: 0.2mm layer height, PLA/PETG, ~80mm × 80mm × 8mm. The front face shows the full-color crest (if using a color 3D printer), the back is flat. For single-color printing, the relief depth creates visible shadows that reveal all details.</p>
+
+    <h3>Files</h3>
     <ul>
-      <li><strong>Gold shield frame</strong> — heraldic shield, rounded bottom, flat top</li>
-      <li><strong>Blue shield field</strong> — royal blue interior (#085999)</li>
-      <li><strong>16-ray golden sunburst</strong> — alternating long/short rays</li>
-      <li><strong>Green India map</strong> — including Sri Lanka</li>
-      <li><strong>Gold scales of justice</strong> — pole, beam, chains, 2 pans</li>
-      <li><strong>Torch</strong> — brown handle, skin hand, gold cup, orange→yellow flame</li>
-      <li><strong>Open book</strong> — V-shape, white pages, dark red spine, black text, gold trim</li>
-      <li><strong>Top banner</strong> — "ST. XAVIER'S · JUNIOR SENIOR · SCHOOL"</li>
-      <li><strong>Bottom banner</strong> — "DISCIPLINE · AND · JUSTICE"</li>
-      <li><strong>Side text</strong> — "GOSHALA ROAD" / "MUZAFFARPUR"</li>
+      <li><code>crest_relief.glb</code> — Blender bas-relief (17 MB, 65k verts, image texture)</li>
+      <li><code>crest_relief_trimesh.glb</code> — Trimesh bas-relief (3 MB, 80k verts, vertex colors)</li>
+      <li><code>crest_heightmap.png</code> — The height map used for displacement</li>
+      <li><code>crest_texture.png</code> — The original image used as texture</li>
+      <li><code>crest_relief_4k.png</code> / <code>crest_relief_trimesh_4k.png</code> — 4K renders (3840×3840)</li>
     </ul>
   </section>
 
-  <!-- FULLSCREEN OVERAY for models -->
+  <!-- FULLSCREEN OVERLAY for models -->
   <div class="fullscreen-overlay" id="fullscreenOverlay">
     <button class="close-fullscreen" onclick="closeFullscreen()">✕</button>
     <div class="fullscreen-header">
@@ -372,10 +394,10 @@
       alt="Fullscreen 3D model"
       auto-rotate
       camera-controls
-      shadow-intensity="0.4"
+      shadow-intensity="0.5"
       environment-image="neutral"
       exposure="1.0"
-      rotation-per-second="15deg"
+      rotation-per-second="10deg"
       interaction-prompt="auto"
     >
       <div class="loading" slot="poster">Loading…</div>
@@ -400,11 +422,10 @@
 
   <footer>
     <p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p>
-    <p>4K 3D Models · Blender 3.6 + Blockbench · <a href="https://github.com/StXaviersOfficial/glm-workspace">GitHub Source</a></p>
+    <p>4K Bas-Relief · Blender + Trimesh · Image-to-3D · <a href="https://github.com/StXaviersOfficial/glm-workspace">GitHub Source</a></p>
   </footer>
 
   <script>
-    // Model viewer controls
     function getViewer(method) {
       return document.getElementById('mv-' + method);
     }
@@ -417,25 +438,24 @@
 
     function resetCamera(method) {
       const v = getViewer(method);
-      v.cameraOrbit = '0deg 80deg 12m';
+      v.cameraOrbit = '0deg 80deg 10m';
       v.fieldOfView = '30deg';
     }
 
     function zoomIn(method) {
       const v = getViewer(method);
       const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.max(4, parseFloat(orbit[2]) - 2);
+      const dist = Math.max(3, parseFloat(orbit[2]) - 1.5);
       v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
     }
 
     function zoomOut(method) {
       const v = getViewer(method);
       const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.min(25, parseFloat(orbit[2]) + 2);
+      const dist = Math.min(25, parseFloat(orbit[2]) + 1.5);
       v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
     }
 
-    // FULLSCREEN MODEL
     function openModelFullscreen(method) {
       const srcViewer = getViewer(method);
       const fsViewer = document.getElementById('mv-fullscreen');
@@ -444,13 +464,11 @@
       const subtitle = document.getElementById('fsSubtitle');
 
       fsViewer.src = srcViewer.src;
-      title.textContent = method === 'blender' ? 'Blender 3D Model (Fullscreen)' : 'Blockbench Voxel Model (Fullscreen)';
+      title.textContent = method === 'relief' ? 'Blender Bas-Relief (Fullscreen)' : 'Trimesh Bas-Relief (Fullscreen)';
       subtitle.textContent = 'Drag to rotate · Scroll to zoom · Right-click to pan · ESC to close';
 
       overlay.classList.add('active');
       fsViewer.autoRotate = true;
-
-      // Prevent body scroll
       document.body.style.overflow = 'hidden';
     }
 
@@ -460,7 +478,6 @@
       document.body.style.overflow = '';
     }
 
-    // FULLSCREEN IMAGE
     function openImageFullscreen(src, title) {
       document.getElementById('fsImage').src = src;
       document.getElementById('imgTitle').textContent = title;
@@ -474,7 +491,6 @@
       document.body.style.overflow = '';
     }
 
-    // Fullscreen viewer controls
     function fsToggleRotate() {
       const v = document.getElementById('mv-fullscreen');
       v.autoRotate = !v.autoRotate;
@@ -482,25 +498,24 @@
 
     function fsResetCamera() {
       const v = document.getElementById('mv-fullscreen');
-      v.cameraOrbit = '0deg 80deg 10m';
+      v.cameraOrbit = '0deg 80deg 8m';
       v.fieldOfView = '30deg';
     }
 
     function fsZoomIn() {
       const v = document.getElementById('mv-fullscreen');
       const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.max(4, parseFloat(orbit[2]) - 2);
+      const dist = Math.max(3, parseFloat(orbit[2]) - 1.5);
       v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
     }
 
     function fsZoomOut() {
       const v = document.getElementById('mv-fullscreen');
       const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.min(25, parseFloat(orbit[2]) + 2);
+      const dist = Math.min(25, parseFloat(orbit[2]) + 1.5);
       v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
     }
 
-    // ESC to close fullscreen
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeFullscreen();
@@ -508,7 +523,6 @@
       }
     });
 
-    // Click overlay background to close
     document.getElementById('fullscreenOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'fullscreenOverlay') closeFullscreen();
     });
@@ -516,7 +530,6 @@
       if (e.target.id === 'imageOverlay') closeImageFullscreen();
     });
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('model-viewer').forEach(v => { v.autoRotate = true; });
     });
