@@ -3,536 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>St. Xavier's School Crest — 3D Bas-Relief (Image-to-3D)</title>
+  <title>St. Xavier's School Crest — 3D Bas-Relief (V3.1)</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    :root {
-      --gold: #B88C1F;
-      --gold-light: #D9B240;
-      --red: #A60D08;
-      --blue: #085999;
-      --cream: #FAF6E8;
-      --dark: #1A1A2E;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      background: linear-gradient(135deg, var(--cream) 0%, #FFF 100%);
-      color: var(--dark);
-      min-height: 100vh;
-      padding: 20px;
-    }
-    header {
-      text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(135deg, var(--blue), var(--red));
-      color: white;
-      border-radius: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 12px 40px rgba(6, 89, 153, 0.35);
-    }
-    header h1 { font-size: 2.8em; margin-bottom: 8px; letter-spacing: 1.5px; }
-    header p { font-size: 1.2em; opacity: 0.95; }
-    .subtitle { font-style: italic; margin-top: 10px; font-size: 1em; opacity: 0.9; }
-    .method-tag {
-      display: inline-block;
-      background: var(--gold);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85em;
-      font-weight: bold;
-      margin-top: 8px;
-    }
-
-    .reference-section {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .ref-card {
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 320px;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .ref-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-    .ref-card img { max-width: 100%; border-radius: 8px; border: 2px solid var(--gold); }
-    .ref-card h3 { color: var(--red); margin-bottom: 8px; font-size: 1.1em; }
-    .ref-card p { font-size: 0.85em; color: #555; margin-top: 8px; }
-    .badge-4k {
-      display: inline-block;
-      background: var(--red);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.75em;
-      font-weight: bold;
-      margin-left: 6px;
-    }
-
-    .models-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      margin-bottom: 30px;
-    }
-    @media (max-width: 900px) { .models-grid { grid-template-columns: 1fr; } }
-
-    .model-card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      border: 4px solid var(--gold);
-    }
-    .model-header {
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: white;
-      padding: 18px 24px;
-    }
-    .model-header h2 { font-size: 1.5em; margin-bottom: 4px; }
-    .model-header .method { font-size: 0.8em; opacity: 0.9; text-transform: uppercase; letter-spacing: 1.5px; }
-    .model-header .stats { font-size: 0.85em; margin-top: 6px; opacity: 0.85; }
-
-    .viewer-wrapper {
-      position: relative;
-      cursor: pointer;
-    }
-    .viewer-wrapper model-viewer {
-      width: 100%;
-      height: 500px;
-      background: radial-gradient(ellipse at center, #f5f5f8 0%, #d8d8e0 100%);
-      --poster-color: transparent;
-    }
-    .fullscreen-hint {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85em;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .viewer-wrapper:hover .fullscreen-hint { opacity: 1; }
-    .click-icon {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      font-size: 1.2em;
-    }
-
-    .model-controls {
-      padding: 16px 24px;
-      background: #fafafa;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-    }
-    .model-controls button {
-      background: var(--blue);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.9em;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-    .model-controls button:hover { background: var(--red); transform: translateY(-2px); }
-    .model-controls button.active { background: var(--red); }
-
-    .info-section {
-      background: white;
-      border-radius: 20px;
-      padding: 36px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      border-left: 6px solid var(--gold);
-    }
-    .info-section h2 { color: var(--red); margin-bottom: 16px; font-size: 1.8em; }
-    .info-section h3 { color: var(--blue); margin: 20px 0 8px; font-size: 1.3em; }
-    .info-section p { line-height: 1.8; margin-bottom: 12px; color: #333; }
-    .info-section ul { margin-left: 24px; margin-bottom: 12px; }
-    .info-section li { line-height: 1.7; margin-bottom: 6px; }
-    .info-section code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.9em;
-    }
-
-    .fullscreen-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.95);
-      z-index: 9999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .fullscreen-overlay.active { display: flex; }
-    .fullscreen-overlay model-viewer {
-      width: 90vw;
-      height: 85vh;
-      background: radial-gradient(ellipse at center, #2a2a2a 0%, #0a0a0a 100%);
-      --poster-color: transparent;
-    }
-    .fullscreen-header {
-      color: white;
-      padding: 16px 24px;
-      text-align: center;
-      width: 100%;
-    }
-    .fullscreen-header h2 { font-size: 1.5em; margin-bottom: 4px; }
-    .fullscreen-header p { opacity: 0.7; font-size: 0.9em; }
-    .close-fullscreen {
-      position: absolute;
-      top: 20px;
-      right: 24px;
-      background: var(--red);
-      color: white;
-      border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      font-size: 1.5em;
-      cursor: pointer;
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
-    }
-    .close-fullscreen:hover { transform: scale(1.1); background: #c41010; }
-    .fullscreen-controls {
-      display: flex;
-      gap: 12px;
-      padding: 16px;
-    }
-    .fullscreen-controls button {
-      background: var(--blue);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.95em;
-      font-family: inherit;
-      transition: background 0.2s;
-    }
-    .fullscreen-controls button:hover { background: var(--red); }
-
-    footer {
-      text-align: center;
-      padding: 24px;
-      color: #666;
-      font-size: 0.9em;
-    }
-    footer a { color: var(--blue); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    .loading { text-align: center; padding: 80px; color: #888; font-size: 1.1em; }
+    :root { --gold:#B88C1F; --gold-l:#D9B240; --red:#A60D08; --blue:#085999; --cream:#FAF6E8; --dark:#1A1A2E; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Georgia',serif; background:linear-gradient(135deg,var(--cream),#FFF); color:var(--dark); min-height:100vh; padding:20px; }
+    header { text-align:center; padding:40px 20px; background:linear-gradient(135deg,var(--blue),var(--red)); color:white; border-radius:20px; margin-bottom:30px; box-shadow:0 12px 40px rgba(6,89,153,0.35); }
+    header h1 { font-size:2.8em; margin-bottom:8px; }
+    header p { font-size:1.2em; opacity:0.95; }
+    .subtitle { font-style:italic; margin-top:10px; opacity:0.9; }
+    .tag { display:inline-block; color:white; padding:4px 12px; border-radius:20px; font-size:0.85em; font-weight:bold; margin-top:8px; }
+    .tag.gold { background:var(--gold); }
+    .tag.red { background:var(--red); margin-left:8px; }
+    .section-divider { text-align:center; margin:40px 0 20px; }
+    .section-divider h2 { display:inline-block; background:var(--dark); color:white; padding:10px 30px; border-radius:30px; font-size:1.4em; }
+    .models-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:30px; }
+    @media (max-width:900px) { .models-grid { grid-template-columns:1fr; } }
+    .model-card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.12); border:4px solid var(--gold); }
+    .model-header { background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:white; padding:18px 24px; }
+    .model-header h2 { font-size:1.4em; margin-bottom:4px; }
+    .model-header .method { font-size:0.75em; opacity:0.9; text-transform:uppercase; letter-spacing:1.5px; }
+    .model-header .stats { font-size:0.8em; margin-top:6px; opacity:0.85; }
+    .viewer-wrapper { position:relative; cursor:pointer; }
+    .viewer-wrapper model-viewer { width:100%; height:550px; background:radial-gradient(ellipse at center,#2a2a3a 0%,#0a0a14 100%); --poster-color:transparent; }
+    .fullscreen-hint { position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.6); color:white; padding:6px 14px; border-radius:20px; font-size:0.85em; pointer-events:none; opacity:0; transition:opacity 0.3s; }
+    .viewer-wrapper:hover .fullscreen-hint { opacity:1; }
+    .click-icon { position:absolute; top:12px; left:12px; background:rgba(0,0,0,0.5); color:white; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; pointer-events:none; font-size:1.2em; }
+    .model-controls { padding:16px 24px; background:#fafafa; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; }
+    .model-controls button { background:var(--blue); color:white; border:none; padding:10px 18px; border-radius:10px; cursor:pointer; font-size:0.9em; transition:all 0.2s; font-family:inherit; }
+    .model-controls button:hover { background:var(--red); transform:translateY(-2px); }
+    .model-controls button.active { background:var(--red); }
+    .info-section { background:white; border-radius:20px; padding:36px; margin-bottom:30px; box-shadow:0 6px 20px rgba(0,0,0,0.08); border-left:6px solid var(--gold); }
+    .info-section h2 { color:var(--red); margin-bottom:16px; font-size:1.8em; }
+    .info-section h3 { color:var(--blue); margin:20px 0 8px; font-size:1.3em; }
+    .info-section p { line-height:1.8; margin-bottom:12px; color:#333; }
+    .info-section ul { margin-left:24px; margin-bottom:12px; }
+    .info-section li { line-height:1.7; margin-bottom:6px; }
+    .info-section code { background:#f4f4f4; padding:2px 6px; border-radius:4px; font-family:monospace; font-size:0.9em; }
+    .fullscreen-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.95); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
+    .fullscreen-overlay.active { display:flex; }
+    .fullscreen-overlay model-viewer { width:95vw; height:88vh; background:radial-gradient(ellipse at center,#2a2a3a 0%,#0a0a14 100%); --poster-color:transparent; }
+    .fullscreen-header { color:white; padding:16px 24px; text-align:center; width:100%; }
+    .fullscreen-header h2 { font-size:1.5em; margin-bottom:4px; }
+    .fullscreen-header p { opacity:0.7; font-size:0.9em; }
+    .close-fs { position:absolute; top:20px; right:24px; background:var(--red); color:white; border:none; width:48px; height:48px; border-radius:50%; font-size:1.5em; cursor:pointer; z-index:10000; display:flex; align-items:center; justify-content:center; transition:transform 0.2s; }
+    .close-fs:hover { transform:scale(1.1); background:#c41010; }
+    .fs-controls { display:flex; gap:12px; padding:16px; }
+    .fs-controls button { background:var(--blue); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-size:0.95em; font-family:inherit; transition:background 0.2s; }
+    .fs-controls button:hover { background:var(--red); }
+    footer { text-align:center; padding:24px; color:#666; font-size:0.9em; }
+    footer a { color:var(--blue); text-decoration:none; }
+    .loading { text-align:center; padding:80px; color:#888; font-size:1.1em; }
   </style>
 </head>
 <body>
   <header>
     <h1>St. Xavier's Junior Senior School</h1>
-    <p>3D Bas-Relief — Image-to-3D Reconstruction <span class="badge-4k">4K</span></p>
+    <p>3D Bas-Relief — V3.1 Smooth Thin Back</p>
     <div class="subtitle">Goshala Road, Muzaffarpur · Discipline and Justice</div>
-    <div class="method-tag">Meshy.ai style · 3D-printable · Exact image texture</div>
+    <span class="tag gold">Thin back (1/4) · Same color front/back · Smoothed edges · More zoom</span>
+    <span class="tag red">V3.1</span>
   </header>
 
-  <section class="reference-section">
-    <div class="ref-card" onclick="openImageFullscreen('models/crest_texture.png', 'Original Reference')">
-      <h3>Original Reference</h3>
-      <img src="models/crest_texture.png" alt="Original crest" />
-      <p>The exact image used as both texture and height source</p>
-    </div>
-    <div class="ref-card" onclick="openImageFullscreen('models/crest_relief_4k.png', 'Blender Bas-Relief 4K')">
-      <h3>Blender Bas-Relief <span class="badge-4k">4K</span></h3>
-      <img src="models/crest_relief_card.png" alt="Blender relief" />
-      <p>65k vertices · Image texture on displaced mesh · Cycles render</p>
-    </div>
-    <div class="ref-card" onclick="openImageFullscreen('models/crest_relief_trimesh_4k.png', 'Trimesh Bas-Relief 4K')">
-      <h3>Trimesh Bas-Relief <span class="badge-4k">4K</span></h3>
-      <img src="models/crest_relief_trimesh_card.png" alt="Trimesh relief" />
-      <p>80k vertices · Vertex colors · 3D-printable thickness</p>
-    </div>
-  </section>
+  <div class="section-divider"><h2>4 Models · Click to View Fullscreen</h2></div>
 
   <div class="models-grid">
     <div class="model-card">
       <div class="model-header">
-        <div class="method">Method 1 · Blender Image-to-3D</div>
-        <h2>Blender Bas-Relief</h2>
-        <div class="stats">65,536 vertices · Image texture + displacement · 17 MB GLB</div>
+        <div class="method">Full Crest · No White · 545K verts</div>
+        <h2>Full Crest (No White)</h2>
+        <div class="stats">545,324 verts · 1,090,644 faces · 20 MB</div>
       </div>
-      <div class="viewer-wrapper" onclick="openModelFullscreen('relief')">
-        <model-viewer
-          id="mv-relief"
-          src="models/crest_relief.glb"
-          alt="St. Xavier's crest — Blender bas-relief"
-          auto-rotate
-          camera-controls
-          shadow-intensity="0.5"
-          environment-image="neutral"
-          exposure="1.0"
-          rotation-per-second="15deg"
-        >
-          <div class="loading" slot="poster">Loading Blender bas-relief…</div>
-        </model-viewer>
-        <div class="click-icon">⛶</div>
-        <div class="fullscreen-hint">Click to view fullscreen</div>
+      <div class="viewer-wrapper" onclick="openFS('full_nw')">
+        <model-viewer id="mv-full_nw" src="models/crest_full_nobg_relief_v3_nowhite.glb" alt="Full no-white" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
+        <div class="click-icon">⛶</div><div class="fullscreen-hint">Click for fullscreen</div>
       </div>
       <div class="model-controls">
-        <button onclick="event.stopPropagation(); toggleRotate('relief')" class="active">Auto-Rotate</button>
-        <button onclick="event.stopPropagation(); resetCamera('relief')">Reset View</button>
-        <button onclick="event.stopPropagation(); zoomIn('relief')">Zoom In</button>
-        <button onclick="event.stopPropagation(); zoomOut('relief')">Zoom Out</button>
-        <button onclick="event.stopPropagation(); openModelFullscreen('relief')" style="background:var(--red)">⛶ Fullscreen</button>
+        <button onclick="event.stopPropagation();toggle('full_nw')" class="active">Auto-Rotate</button>
+        <button onclick="event.stopPropagation();reset('full_nw')">Reset</button>
+        <button onclick="event.stopPropagation();zoomIn('full_nw')">Zoom In</button>
+        <button onclick="event.stopPropagation();zoomOut('full_nw')">Zoom Out</button>
+        <button onclick="event.stopPropagation();openFS('full_nw')" style="background:var(--red)">⛶ Fullscreen</button>
       </div>
     </div>
 
     <div class="model-card">
       <div class="model-header">
-        <div class="method">Method 2 · Trimesh Image-to-3D</div>
-        <h2>Trimesh Bas-Relief</h2>
-        <div class="stats">80,000 vertices · Vertex colors · 3D-printable · 3 MB GLB</div>
+        <div class="method">Full Crest · Intelligent · 559K verts</div>
+        <h2>Full Crest (Intelligent)</h2>
+        <div class="stats">559,252 verts · 1,118,500 faces · 21 MB</div>
       </div>
-      <div class="viewer-wrapper" onclick="openModelFullscreen('trimesh')">
-        <model-viewer
-          id="mv-trimesh"
-          src="models/crest_relief_trimesh.glb"
-          alt="St. Xavier's crest — Trimesh bas-relief"
-          auto-rotate
-          camera-controls
-          shadow-intensity="0.5"
-          environment-image="neutral"
-          exposure="1.0"
-          rotation-per-second="15deg"
-        >
-          <div class="loading" slot="poster">Loading Trimesh bas-relief…</div>
-        </model-viewer>
-        <div class="click-icon">⛶</div>
-        <div class="fullscreen-hint">Click to view fullscreen</div>
+      <div class="viewer-wrapper" onclick="openFS('full_int')">
+        <model-viewer id="mv-full_int" src="models/crest_full_nobg_relief_v3_intelligent.glb" alt="Full intelligent" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
+        <div class="click-icon">⛶</div><div class="fullscreen-hint">Click for fullscreen</div>
       </div>
       <div class="model-controls">
-        <button onclick="event.stopPropagation(); toggleRotate('trimesh')" class="active">Auto-Rotate</button>
-        <button onclick="event.stopPropagation(); resetCamera('trimesh')">Reset View</button>
-        <button onclick="event.stopPropagation(); zoomIn('trimesh')">Zoom In</button>
-        <button onclick="event.stopPropagation(); zoomOut('trimesh')">Zoom Out</button>
-        <button onclick="event.stopPropagation(); openModelFullscreen('trimesh')" style="background:var(--red)">⛶ Fullscreen</button>
+        <button onclick="event.stopPropagation();toggle('full_int')" class="active">Auto-Rotate</button>
+        <button onclick="event.stopPropagation();reset('full_int')">Reset</button>
+        <button onclick="event.stopPropagation();zoomIn('full_int')">Zoom In</button>
+        <button onclick="event.stopPropagation();zoomOut('full_int')">Zoom Out</button>
+        <button onclick="event.stopPropagation();openFS('full_int')" style="background:var(--red)">⛶ Fullscreen</button>
+      </div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-header">
+        <div class="method">Split Parts · No White · 345K verts</div>
+        <h2>Split Parts (No White)</h2>
+        <div class="stats">344,962 verts · 689,884 faces · 13 MB</div>
+      </div>
+      <div class="viewer-wrapper" onclick="openFS('split_nw')">
+        <model-viewer id="mv-split_nw" src="models/crest_split_parts_relief_v3_nowhite.glb" alt="Split no-white" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
+        <div class="click-icon">⛶</div><div class="fullscreen-hint">Click for fullscreen</div>
+      </div>
+      <div class="model-controls">
+        <button onclick="event.stopPropagation();toggle('split_nw')" class="active">Auto-Rotate</button>
+        <button onclick="event.stopPropagation();reset('split_nw')">Reset</button>
+        <button onclick="event.stopPropagation();zoomIn('split_nw')">Zoom In</button>
+        <button onclick="event.stopPropagation();zoomOut('split_nw')">Zoom Out</button>
+        <button onclick="event.stopPropagation();openFS('split_nw')" style="background:var(--red)">⛶ Fullscreen</button>
+      </div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-header">
+        <div class="method">Split Parts · Intelligent · 437K verts</div>
+        <h2>Split Parts (Intelligent)</h2>
+        <div class="stats">436,898 verts · 873,756 faces · 16 MB</div>
+      </div>
+      <div class="viewer-wrapper" onclick="openFS('split_int')">
+        <model-viewer id="mv-split_int" src="models/crest_split_parts_relief_v3_intelligent.glb" alt="Split intelligent" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
+        <div class="click-icon">⛶</div><div class="fullscreen-hint">Click for fullscreen</div>
+      </div>
+      <div class="model-controls">
+        <button onclick="event.stopPropagation();toggle('split_int')" class="active">Auto-Rotate</button>
+        <button onclick="event.stopPropagation();reset('split_int')">Reset</button>
+        <button onclick="event.stopPropagation();zoomIn('split_int')">Zoom In</button>
+        <button onclick="event.stopPropagation();zoomOut('split_int')">Zoom Out</button>
+        <button onclick="event.stopPropagation();openFS('split_int')" style="background:var(--red)">⛶ Fullscreen</button>
       </div>
     </div>
   </div>
 
   <section class="info-section">
-    <h2>How This Works (Image-to-3D)</h2>
-    <p>This is a true <strong>image-to-3D bas-relief</strong> reconstruction — the same approach used by Meshy.ai, but done locally with open-source tools. The original crest image is used both as the <strong>surface texture</strong> AND as the source for <strong>3D displacement depth</strong>. The result is a 3D-printable model that looks exactly like the reference when viewed from the front, with real geometric depth.</p>
-
-    <h3>Process</h3>
-    <ol style="line-height: 1.8; margin-left: 24px;">
-      <li><strong>Height map generation:</strong> The reference image is analyzed using luminance + saturation + edge detection + background-difference. Colored crest elements get high values (raised), white background gets low values (flat). Smoothed with Gaussian blur.</li>
-      <li><strong>Mesh subdivision:</strong> A flat plane is subdivided into a high-poly grid (256×256 for Blender = 65,536 vertices, 200×200 for trimesh = 40,000 vertices).</li>
-      <li><strong>Vertex displacement:</strong> Each vertex's Z coordinate is set by sampling the height map at its UV position. This creates real 3D relief geometry — the torch, scales, book, and banners all have actual depth.</li>
-      <li><strong>UV mapping + texture:</strong> The original crest image is UV-mapped onto the displaced surface. The front face shows the exact image, warped onto the 3D relief.</li>
-      <li><strong>Extrusion for 3D printing:</strong> The entire mesh is extruded backward (Solidify modifier in Blender, manual extrusion in trimesh) to give it physical thickness — ready for 3D printing as a coin/medallion/bas-relief plaque.</li>
-      <li><strong>GLB export:</strong> The final mesh with embedded texture is exported as GLB, viewable in any 3D viewer including model-viewer on this page.</li>
-    </ol>
-
-    <h3>Why this is better than primitive-based 3D</h3>
-    <p>Previous attempts tried to <em>recreate</em> the crest using 3D primitives (cubes, spheres, cylinders) — this always looks "blocky" and never matches the exact image. The bas-relief approach uses the <strong>actual image pixels</strong> as the surface, so every detail (text, fine lines, color gradients) is preserved exactly. The 3D depth comes from the height map, giving real geometric relief that catches light and shadow naturally.</p>
-
-    <h3>3D Printing</h3>
-    <p>Both GLB files are 3D-printable. The mesh is manifold (watertight) with proper thickness. Print settings: 0.2mm layer height, PLA/PETG, ~80mm × 80mm × 8mm. The front face shows the full-color crest (if using a color 3D printer), the back is flat. For single-color printing, the relief depth creates visible shadows that reveal all details.</p>
-
-    <h3>Files</h3>
+    <h2>V3.1 — Improvements</h2>
+    <p><strong>V3.1 fixes the back and edges:</strong></p>
     <ul>
-      <li><code>crest_relief.glb</code> — Blender bas-relief (17 MB, 65k verts, image texture)</li>
-      <li><code>crest_relief_trimesh.glb</code> — Trimesh bas-relief (3 MB, 80k verts, vertex colors)</li>
-      <li><code>crest_heightmap.png</code> — The height map used for displacement</li>
-      <li><code>crest_texture.png</code> — The original image used as texture</li>
-      <li><code>crest_relief_4k.png</code> / <code>crest_relief_trimesh_4k.png</code> — 4K renders (3840×3840)</li>
+      <li><strong>Thin back (1/4 width):</strong> Back depth reduced from 0.4 to 0.1 units — much thinner, less bulky</li>
+      <li><strong>Same color front/back:</strong> Back vertices now use the SAME colors as front (was 70% darker before)</li>
+      <li><strong>Smoothed edges:</strong> Laplacian smoothing applied (2 iterations) — softens jagged left/right/back edges to match the front</li>
+      <li><strong>More zoomable:</strong> Camera range expanded — zoom in to 1m (was 3m), zoom out to 50m (was 25m)</li>
+    </ul>
+    <h3>Technical Specs</h3>
+    <ul>
+      <li>Grid: 800×800 = 640,000 candidate vertices</li>
+      <li>All 4 models: 10MB+ (13-21 MB each)</li>
+      <li>Source: 4096×4096 (4K, transparent BG)</li>
+      <li>Relief depth: 0.9 units (front), back thickness: 0.1 units (1/4 of original)</li>
+      <li>Smoothing: Laplacian, 2 iterations, lambda=0.3</li>
+      <li>Watertight (manifold) — 3D-printable</li>
     </ul>
   </section>
 
-  <!-- FULLSCREEN OVERLAY for models -->
-  <div class="fullscreen-overlay" id="fullscreenOverlay">
-    <button class="close-fullscreen" onclick="closeFullscreen()">✕</button>
-    <div class="fullscreen-header">
-      <h2 id="fsTitle">3D Model</h2>
-      <p id="fsSubtitle">Drag to rotate · Scroll to zoom · Right-click to pan</p>
-    </div>
-    <model-viewer
-      id="mv-fullscreen"
-      src=""
-      alt="Fullscreen 3D model"
-      auto-rotate
-      camera-controls
-      shadow-intensity="0.5"
-      environment-image="neutral"
-      exposure="1.0"
-      rotation-per-second="10deg"
-      interaction-prompt="auto"
-    >
-      <div class="loading" slot="poster">Loading…</div>
-    </model-viewer>
-    <div class="fullscreen-controls">
-      <button onclick="fsToggleRotate()">Toggle Rotate</button>
-      <button onclick="fsResetCamera()">Reset View</button>
-      <button onclick="fsZoomIn()">Zoom In</button>
-      <button onclick="fsZoomOut()">Zoom Out</button>
-    </div>
+  <div class="fullscreen-overlay" id="fsOverlay">
+    <button class="close-fs" onclick="closeFS()">✕</button>
+    <div class="fullscreen-header"><h2 id="fsTitle">3D Model</h2><p>Drag · Scroll · Right-click · ESC</p></div>
+    <model-viewer id="mv-fs" src="" alt="Fullscreen" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="10deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
+    <div class="fs-controls"><button onclick="fsToggle()">Toggle Rotate</button><button onclick="fsReset()">Reset</button><button onclick="fsZoomIn()">Zoom In</button><button onclick="fsZoomOut()">Zoom Out</button></div>
   </div>
 
-  <!-- FULLSCREEN OVERLAY for images -->
-  <div class="fullscreen-overlay" id="imageOverlay">
-    <button class="close-fullscreen" onclick="closeImageFullscreen()">✕</button>
-    <div class="fullscreen-header">
-      <h2 id="imgTitle">Image</h2>
-      <p>Click outside image or press ESC to close</p>
-    </div>
-    <img id="fsImage" src="" style="max-width:90vw; max-height:80vh; border-radius:12px; box-shadow:0 0 40px rgba(255,255,255,0.1)" />
-  </div>
-
-  <footer>
-    <p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p>
-    <p>4K Bas-Relief · Blender + Trimesh · Image-to-3D · <a href="https://github.com/StXaviersOfficial/glm-workspace">GitHub Source</a></p>
-  </footer>
+  <footer><p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p><p>V3.1 · Thin Smooth Back · Same Colors · More Zoom</p></footer>
 
   <script>
-    function getViewer(method) {
-      return document.getElementById('mv-' + method);
-    }
-
-    function toggleRotate(method) {
-      const v = getViewer(method);
-      v.autoRotate = !v.autoRotate;
-      event.target.classList.toggle('active', v.autoRotate);
-    }
-
-    function resetCamera(method) {
-      const v = getViewer(method);
-      v.cameraOrbit = '0deg 80deg 10m';
-      v.fieldOfView = '30deg';
-    }
-
-    function zoomIn(method) {
-      const v = getViewer(method);
-      const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.max(3, parseFloat(orbit[2]) - 1.5);
-      v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
-    }
-
-    function zoomOut(method) {
-      const v = getViewer(method);
-      const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.min(25, parseFloat(orbit[2]) + 1.5);
-      v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
-    }
-
-    function openModelFullscreen(method) {
-      const srcViewer = getViewer(method);
-      const fsViewer = document.getElementById('mv-fullscreen');
-      const overlay = document.getElementById('fullscreenOverlay');
-      const title = document.getElementById('fsTitle');
-      const subtitle = document.getElementById('fsSubtitle');
-
-      fsViewer.src = srcViewer.src;
-      title.textContent = method === 'relief' ? 'Blender Bas-Relief (Fullscreen)' : 'Trimesh Bas-Relief (Fullscreen)';
-      subtitle.textContent = 'Drag to rotate · Scroll to zoom · Right-click to pan · ESC to close';
-
-      overlay.classList.add('active');
-      fsViewer.autoRotate = true;
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeFullscreen() {
-      document.getElementById('fullscreenOverlay').classList.remove('active');
-      document.getElementById('mv-fullscreen').src = '';
-      document.body.style.overflow = '';
-    }
-
-    function openImageFullscreen(src, title) {
-      document.getElementById('fsImage').src = src;
-      document.getElementById('imgTitle').textContent = title;
-      document.getElementById('imageOverlay').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeImageFullscreen() {
-      document.getElementById('imageOverlay').classList.remove('active');
-      document.getElementById('fsImage').src = '';
-      document.body.style.overflow = '';
-    }
-
-    function fsToggleRotate() {
-      const v = document.getElementById('mv-fullscreen');
-      v.autoRotate = !v.autoRotate;
-    }
-
-    function fsResetCamera() {
-      const v = document.getElementById('mv-fullscreen');
-      v.cameraOrbit = '0deg 80deg 8m';
-      v.fieldOfView = '30deg';
-    }
-
-    function fsZoomIn() {
-      const v = document.getElementById('mv-fullscreen');
-      const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.max(3, parseFloat(orbit[2]) - 1.5);
-      v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
-    }
-
-    function fsZoomOut() {
-      const v = document.getElementById('mv-fullscreen');
-      const orbit = v.cameraOrbit.split(' ');
-      const dist = Math.min(25, parseFloat(orbit[2]) + 1.5);
-      v.cameraOrbit = `${orbit[0]} ${orbit[1]} ${dist}m`;
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeFullscreen();
-        closeImageFullscreen();
-      }
-    });
-
-    document.getElementById('fullscreenOverlay').addEventListener('click', (e) => {
-      if (e.target.id === 'fullscreenOverlay') closeFullscreen();
-    });
-    document.getElementById('imageOverlay').addEventListener('click', (e) => {
-      if (e.target.id === 'imageOverlay') closeImageFullscreen();
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('model-viewer').forEach(v => { v.autoRotate = true; });
-    });
+    function getV(m){return document.getElementById('mv-'+m);}
+    function toggle(m){const v=getV(m);v.autoRotate=!v.autoRotate;event.target.classList.toggle('active',v.autoRotate);}
+    function reset(m){const v=getV(m);v.cameraOrbit='0deg 80deg 8m';v.fieldOfView='30deg';}
+    function zoomIn(m){const v=getV(m);const o=v.cameraOrbit.split(' ');v.cameraOrbit=`${o[0]} ${o[1]} ${Math.max(1,parseFloat(o[2])-1)}m`;}
+    function zoomOut(m){const v=getV(m);const o=v.cameraOrbit.split(' ');v.cameraOrbit=`${o[0]} ${o[1]} ${Math.min(50,parseFloat(o[2])+2)}m`;}
+    const titles={'full_nw':'Full Crest — No White (Fullscreen)','full_int':'Full Crest — Intelligent (Fullscreen)','split_nw':'Split Parts — No White (Fullscreen)','split_int':'Split Parts — Intelligent (Fullscreen)'};
+    function openFS(m){const s=getV(m);const f=document.getElementById('mv-fs');f.src=s.src;document.getElementById('fsTitle').textContent=titles[m]||'3D Model';document.getElementById('fsOverlay').classList.add('active');f.autoRotate=true;document.body.style.overflow='hidden';}
+    function closeFS(){document.getElementById('fsOverlay').classList.remove('active');document.getElementById('mv-fs').src='';document.body.style.overflow='';}
+    function fsToggle(){const v=document.getElementById('mv-fs');v.autoRotate=!v.autoRotate;}
+    function fsReset(){const v=document.getElementById('mv-fs');v.cameraOrbit='0deg 80deg 8m';v.fieldOfView='30deg';}
+    function fsZoomIn(){const v=document.getElementById('mv-fs');const o=v.cameraOrbit.split(' ');v.cameraOrbit=`${o[0]} ${o[1]} ${Math.max(1,parseFloat(o[2])-1)}m`;}
+    function fsZoomOut(){const v=document.getElementById('mv-fs');const o=v.cameraOrbit.split(' ');v.cameraOrbit=`${o[0]} ${o[1]} ${Math.min(50,parseFloat(o[2])+2)}m`;}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFS();});
+    document.getElementById('fsOverlay').addEventListener('click',e=>{if(e.target.id==='fsOverlay')closeFS();});
+    document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('model-viewer').forEach(v=>{v.autoRotate=true;});});
   </script>
 </body>
 </html>
