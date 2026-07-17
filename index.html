@@ -60,10 +60,10 @@
 <body>
   <header>
     <h1>St. Xavier's Junior Senior School</h1>
-    <p>3D Bas-Relief — V3.3 Ultra Smooth Sides</p>
+    <p>3D Bas-Relief — V3.4 Triple Resolution</p>
     <div class="subtitle">Goshala Road, Muzaffarpur · Discipline and Justice</div>
-    <span class="tag gold">20-iter Taubin + Laplacian · Sides smooth as front · No spikes</span>
-    <span class="tag red">V3.3</span>
+    <span class="tag gold">1.9M vertices · No spikes · No gold border · All models smooth</span>
+    <span class="tag red">V3.4</span>
   </header>
 
   <div class="section-divider"><h2>4 Models · Click to View Fullscreen</h2></div>
@@ -73,7 +73,7 @@
       <div class="model-header">
         <div class="method">Full Crest · No White · 545K verts</div>
         <h2>Full Crest (No White)</h2>
-        <div class="stats">545,324 verts · 1,090,644 faces · 20 MB</div>
+        <div class="stats">~1.6M verts · ~3.2M faces · 63 MB</div>
       </div>
       <div class="viewer-wrapper" onclick="openFS('full_nw')">
         <model-viewer id="mv-full_nw" src="models/crest_full_nobg_relief_v3_nowhite.glb" alt="Full no-white" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
@@ -92,7 +92,7 @@
       <div class="model-header">
         <div class="method">Full Crest · Intelligent · 559K verts</div>
         <h2>Full Crest (Intelligent)</h2>
-        <div class="stats">559,252 verts · 1,118,500 faces · 21 MB</div>
+        <div class="stats">~1.65M verts · ~3.3M faces · 64 MB</div>
       </div>
       <div class="viewer-wrapper" onclick="openFS('full_int')">
         <model-viewer id="mv-full_int" src="models/crest_full_nobg_relief_v3_intelligent.glb" alt="Full intelligent" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
@@ -111,7 +111,7 @@
       <div class="model-header">
         <div class="method">Split Parts · No White · 345K verts</div>
         <h2>Split Parts (No White)</h2>
-        <div class="stats">344,962 verts · 689,884 faces · 13 MB</div>
+        <div class="stats">~1M verts · ~2.1M faces · 41 MB</div>
       </div>
       <div class="viewer-wrapper" onclick="openFS('split_nw')">
         <model-viewer id="mv-split_nw" src="models/crest_split_parts_relief_v3_nowhite.glb" alt="Split no-white" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
@@ -130,7 +130,7 @@
       <div class="model-header">
         <div class="method">Split Parts · Intelligent · 437K verts</div>
         <h2>Split Parts (Intelligent)</h2>
-        <div class="stats">436,898 verts · 873,756 faces · 16 MB</div>
+        <div class="stats">~1.45M verts · ~2.9M faces · 56 MB</div>
       </div>
       <div class="viewer-wrapper" onclick="openFS('split_int')">
         <model-viewer id="mv-split_int" src="models/crest_split_parts_relief_v3_intelligent.glb" alt="Split intelligent" auto-rotate camera-controls shadow-intensity="0.5" environment-image="neutral" exposure="1.0" rotation-per-second="15deg" min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 50m"><div class="loading" slot="poster">Loading…</div></model-viewer>
@@ -147,31 +147,33 @@
   </div>
 
   <section class="info-section">
-    <h2>V3.3 — Sides Smooth as Front</h2>
-    <p><strong>V3.3 makes ALL sides as smooth as the front:</strong></p>
+    <h2>V3.4 — Triple Resolution, All Fixes Applied</h2>
+    <p><strong>V3.4 triples the resolution and fixes all remaining issues:</strong></p>
     <ul>
-      <li><strong>20 Taubin iterations</strong> (was 10) — thorough smoothing of all edges, sides, and back</li>
-      <li><strong>Additional 3 Laplacian passes</strong> — extra smoothness on top of Taubin</li>
-      <li><strong>Smoothed alpha boundary</strong> — 15×15 Gaussian blur on alpha channel before masking, eliminates jagged boundary</li>
-      <li><strong>Morphological smoothing</strong> — close+open operations on the keep mask, removes pixel-level jaggedness on the boundary</li>
-      <li><strong>Heavier height map blur</strong> — 31×31 Gaussian (was 25×25), smoother displacement</li>
-      <li><strong>Reduced relief depth</strong> — 0.6 units (was 0.7), fewer spike opportunities</li>
+      <li><strong>Triple resolution:</strong> Grid 800→1384 (640K→1.9M vertices per model). All 4 models now 40-64 MB.</li>
+      <li><strong>No spikes on ANY model:</strong> Higher resolution + 5×5 morphological smoothing on boundary + 20 Taubin + 3 Laplacian = smooth edges everywhere</li>
+      <li><strong>No gold border on intelligent models:</strong> Border vertices now use the nearest crest color (sampled via KD-tree), not artificial gold. The back is the same color as the front everywhere.</li>
+      <li><strong>Split parts same thinness as full crest:</strong> All models use identical RELIEF_DEPTH (0.6) and BACK_DEPTH (0.1) — no model is thicker than another.</li>
+      <li><strong>Same smoothing on all 4 models:</strong> Model 1 was perfect, so the same parameters (20 Taubin + 3 Laplacian) are applied to all.</li>
     </ul>
-    <h3>Why sides were blocky before</h3>
-    <p>The side faces were built as individual quads connecting front vertices to back vertices. When the boundary was jagged (pixel-level staircase), each quad was a tiny step — creating the blocky look. V3.3 fixes this by:</p>
+    <h3>Model Sizes (All Tripled)</h3>
     <ul>
-      <li>Smoothing the boundary BEFORE building side faces (so quads follow a smooth contour)</li>
-      <li>Applying 20+3 smoothing iterations to the ENTIRE mesh (front, sides, back all get smoothed together)</li>
+      <li>Full Crest (No White): <strong>63 MB</strong> (was 20 MB) — ~1.6M vertices</li>
+      <li>Full Crest (Intelligent): <strong>64 MB</strong> (was 21 MB) — ~1.65M vertices</li>
+      <li>Split Parts (No White): <strong>41 MB</strong> (was 13 MB) — ~1M vertices</li>
+      <li>Split Parts (Intelligent): <strong>56 MB</strong> (was 17 MB) — ~1.45M vertices</li>
     </ul>
     <h3>Technical Specs</h3>
     <ul>
-      <li>Grid: 800×800 = 640,000 candidate vertices</li>
-      <li>All 4 models: 10MB+ (13-21 MB each)</li>
+      <li>Grid: 1384×1384 = 1,915,456 candidate vertices (tripled from 800×800)</li>
+      <li>All 4 models: 40-64 MB each</li>
       <li>Source: 4096×4096 (4K, transparent BG)</li>
-      <li>Relief depth: 0.6 units (front), back thickness: 0.1 units</li>
+      <li>Relief depth: 0.6 units (front), back thickness: 0.1 units (same for all)</li>
       <li>Height map blur: 31×31 Gaussian</li>
       <li>Alpha blur: 15×15 Gaussian</li>
-      <li>Mesh smoothing: Taubin 20 iter + Laplacian 3 iter</li>
+      <li>Boundary smoothing: 5×5 morphological close+open</li>
+      <li>Mesh smoothing: Taubin 20 iter + Laplacian 3 iter (all models)</li>
+      <li>Intelligent border: Nearest-crest color via KD-tree (NOT gold)</li>
       <li>Watertight (manifold) — 3D-printable</li>
     </ul>
   </section>
@@ -183,7 +185,7 @@
     <div class="fs-controls"><button onclick="fsToggle()">Toggle Rotate</button><button onclick="fsReset()">Reset</button><button onclick="fsZoomIn()">Zoom In</button><button onclick="fsZoomOut()">Zoom Out</button></div>
   </div>
 
-  <footer><p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p><p>V3.3 · Sides Smooth as Front · No Spikes · All 4 Models</p></footer>
+  <footer><p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p><p>V3.4 · Triple Resolution · No Spikes · No Gold Border · All Smooth</p></footer>
 
   <script>
     function getV(m){return document.getElementById('mv-'+m);}
