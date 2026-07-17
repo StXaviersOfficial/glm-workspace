@@ -60,10 +60,10 @@
 <body>
   <header>
     <h1>St. Xavier's Junior Senior School</h1>
-    <p>3D Bas-Relief — V3.1 Smooth Thin Back</p>
+    <p>3D Bas-Relief — V3.2 Fully Smoothed</p>
     <div class="subtitle">Goshala Road, Muzaffarpur · Discipline and Justice</div>
-    <span class="tag gold">Thin back (1/4) · Same color front/back · Smoothed edges · More zoom</span>
-    <span class="tag red">V3.1</span>
+    <span class="tag gold">Taubin smoothed · No spikes · Smooth sides · Thin back</span>
+    <span class="tag red">V3.2</span>
   </header>
 
   <div class="section-divider"><h2>4 Models · Click to View Fullscreen</h2></div>
@@ -147,21 +147,31 @@
   </div>
 
   <section class="info-section">
-    <h2>V3.1 — Improvements</h2>
-    <p><strong>V3.1 fixes the back and edges:</strong></p>
+    <h2>V3.2 — Fully Smoothed, No Spikes</h2>
+    <p><strong>V3.2 fixes the spikes and blocky sides:</strong></p>
     <ul>
-      <li><strong>Thin back (1/4 width):</strong> Back depth reduced from 0.4 to 0.1 units — much thinner, less bulky</li>
-      <li><strong>Same color front/back:</strong> Back vertices now use the SAME colors as front (was 70% darker before)</li>
-      <li><strong>Smoothed edges:</strong> Laplacian smoothing applied (2 iterations) — softens jagged left/right/back edges to match the front</li>
-      <li><strong>More zoomable:</strong> Camera range expanded — zoom in to 1m (was 3m), zoom out to 50m (was 25m)</li>
+      <li><strong>No more spikes:</strong> Taubin smoothing (10 iterations, volume-preserving) removes all jagged edges and pixel-spikes from the back and sides</li>
+      <li><strong>Smooth left/right sides:</strong> Heavy Gaussian blur on height map (25×25 kernel) before displacement eliminates staircase artifacts</li>
+      <li><strong>Reduced relief depth:</strong> 0.9 → 0.7 units — less extreme height variations means fewer spikes</li>
+      <li><strong>Thin back (1/4 width):</strong> 0.1 units back depth (kept from V3.1)</li>
+      <li><strong>Same color front/back:</strong> Back uses identical colors as front (kept from V3.1)</li>
+      <li><strong>More zoomable:</strong> 1m to 50m range (kept from V3.1)</li>
     </ul>
+    <h3>Smoothing Details</h3>
+    <p><strong>Taubin smoothing</strong> (used here) is better than Laplacian for this purpose:</p>
+    <ul>
+      <li><strong>Laplacian:</strong> Shrinks the mesh — can collapse thin features</li>
+      <li><strong>Taubin:</strong> Alternates smooth/pass and un-smooth/pass — preserves volume while smoothing</li>
+    </ul>
+    <p>10 iterations of Taubin (lambda=0.5, nu=-0.53) thoroughly smooths all edges without losing the crest's overall shape.</p>
     <h3>Technical Specs</h3>
     <ul>
       <li>Grid: 800×800 = 640,000 candidate vertices</li>
       <li>All 4 models: 10MB+ (13-21 MB each)</li>
       <li>Source: 4096×4096 (4K, transparent BG)</li>
-      <li>Relief depth: 0.9 units (front), back thickness: 0.1 units (1/4 of original)</li>
-      <li>Smoothing: Laplacian, 2 iterations, lambda=0.3</li>
+      <li>Relief depth: 0.7 units (front), back thickness: 0.1 units</li>
+      <li>Height map blur: 25×25 Gaussian (extra smooth)</li>
+      <li>Mesh smoothing: Taubin, 10 iterations</li>
       <li>Watertight (manifold) — 3D-printable</li>
     </ul>
   </section>
@@ -173,7 +183,7 @@
     <div class="fs-controls"><button onclick="fsToggle()">Toggle Rotate</button><button onclick="fsReset()">Reset</button><button onclick="fsZoomIn()">Zoom In</button><button onclick="fsZoomOut()">Zoom Out</button></div>
   </div>
 
-  <footer><p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p><p>V3.1 · Thin Smooth Back · Same Colors · More Zoom</p></footer>
+  <footer><p>St. Xavier's Junior Senior School · Goshala Road, Muzaffarpur</p><p>V3.2 · Taubin Smoothed · No Spikes · Smooth Sides</p></footer>
 
   <script>
     function getV(m){return document.getElementById('mv-'+m);}
